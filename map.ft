@@ -1,0 +1,35 @@
+uniform sampler2D tex_0;
+uniform sampler2D tex_1;
+uniform sampler2D tex_2;
+uniform sampler2D tex_3;
+uniform sampler2D tex_4;
+varying vec2 coord_0;
+varying vec2 coord_1;
+varying vec4 eye_coord;
+varying vec3 normal;
+
+void main()
+{
+	vec3 vp = normalize(vec3(gl_LightSource[0].position) - vec3(eye_coord.xyz/eye_coord.w));
+	vec2 coord = (coord_1 + vec2(640.0))/vec2(1280.0);
+	
+	vec4 dirt = texture2D(tex_0, coord_0);
+	vec4 dirt1 = texture2D(tex_0, coord_0/2.5);
+	vec4 grass = texture2D(tex_1, coord_0*2.5);
+	vec4 grass1 = texture2D(tex_1, coord_0);
+	vec4 gdens = texture2D(tex_2, coord);
+	vec4 rock = texture2D(tex_3, coord_0*1.5);
+	vec4 rock1 = texture2D(tex_3, coord_0/2.5);
+	vec4 rdens = texture2D(tex_4, coord);
+	
+	float ecmult = clamp(length(eye_coord)/90.0, 0.0, 1.0);
+	vec4 d = dirt1*ecmult*.5 + dirt*(1.0 - ecmult*.5);
+	vec4 g = grass1*ecmult*.5 + grass*(1.0 - ecmult*.5);
+	vec4 r = rock1*ecmult*.5 + rock*(1.0 - ecmult*.5);
+	
+	vec3 step1 = mix(d.rgb, g.rgb, 0.9*gdens.b*ecmult);
+	vec3 final = mix(step1, r.rgb, rdens.b);
+	
+	
+	gl_FragColor = vec4(final*min(max(0.0, dot(normal, vp)), 1.0), 1.0);
+}

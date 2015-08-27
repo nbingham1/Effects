@@ -1,0 +1,16 @@
+uniform sampler2D tex_0;
+//uniform sampler3D tex_1;
+varying vec2 coord_0;
+varying vec4 eye_coord;
+varying vec3 normal;
+
+void main()
+{
+	vec3 vp = normalize(vec3(gl_LightSource[0].position) - vec3(eye_coord.xyz/eye_coord.w));
+	vec4 color = texture2D(tex_0, coord_0);
+	//vec4 noise = texture3D(tex_1, eye_coord.xyz/1000.0);
+	
+	float ecmult = clamp(length(eye_coord)/(18.0*18.0), 0.0, 1.0);
+	
+	gl_FragColor = vec4(color.rgb*min(max(0.0, dot(normal, vp) + 0.25), 1.0), color.a*(1.0 - ecmult));
+}

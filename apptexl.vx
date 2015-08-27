@@ -1,0 +1,12 @@
+varying vec2 coord_0;
+varying vec4 eye_coord;
+varying vec3 normal;
+
+void main()
+{
+	coord_0 = gl_MultiTexCoord0.st;
+	eye_coord = gl_ModelViewMatrix*gl_Vertex;
+	normal = gl_NormalMatrix*gl_Normal;
+	
+	gl_Position = gl_ModelViewProjectionMatrix*gl_Vertex;
+}

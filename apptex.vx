@@ -1,0 +1,7 @@
+varying vec2 coord_0;
+
+void main()
+{
+	coord_0 = gl_MultiTexCoord0.st;
+	gl_Position = ftransform();
+}
